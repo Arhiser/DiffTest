@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <EditText
+        android:id="@+id/temp_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Enter temperature in celsius degree"
+        android:tag="count"
+        android:inputType="numberSigned"
+        android:singleLine="true"
+        android:maxLength="6"
+        android:layout_margin="32dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="belowZeroMessage"
+        android:layout_margin="32dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="tempFaren"
+        android:hint="Temperature in Fahrenheit degree"
+        android:layout_margin="32dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="tempKelvin"
+        android:hint="Temperature in Kelvin degree"
+        android:layout_margin="32dp"/>
+
+</LinearLayout>
