@@ -1,11 +1,9 @@
 package com.arhiser.difftest.model;
 
-import com.arhiser.difftest.difs.AndroidIntrospector;
+import com.arhiser.difftest.difs.Cancellable;
+import com.arhiser.difftest.difs.DiffService;
 
 import java.util.HashSet;
-
-import de.danielbechler.diff.ObjectDifferBuilder;
-import de.danielbechler.diff.node.DiffNode;
 
 public class ChangeDispatcher<T extends Copyable<T>> {
     private T currentValue;
@@ -18,18 +16,19 @@ public class ChangeDispatcher<T extends Copyable<T>> {
     }
 
     public T startChange() {
-        changed = currentValue.copy();
+        if (currentValue != null) {
+            changed = currentValue.copy();
+        }
         return changed;
     }
 
-    public void apply() {
-        ObjectDifferBuilder builder = ObjectDifferBuilder.startBuilding();
-        builder.introspection().setDefaultIntrospector(new AndroidIntrospector());
-        DiffNode changes = builder.build().compare(changed, currentValue);
-        for(ChangesListener listener: listeners) {
-            listener.onChanges(this, new DiffData<>(changed, changes));
-        }
-        currentValue = changed;
+    public Cancellable apply(DiffService diffService) {
+        return diffService.getDiff(currentValue, changed, diff -> {
+            for(ChangesListener listener: listeners) {
+                listener.onChanges(this, diff);
+            }
+            currentValue = changed;
+        });
     }
 
     public void addListener(ChangesListener listener) {
@@ -45,24 +44,6 @@ public class ChangeDispatcher<T extends Copyable<T>> {
     }
 
     public interface ChangesListener {
-        void onChanges(ChangeDispatcher source, DiffData changes);
-    }
-
-    public static class DiffData<T> {
-        private T object;
-        private DiffNode difs;
-
-        public DiffData(T object, DiffNode difs) {
-            this.object = object;
-            this.difs = difs;
-        }
-
-        public T getObject() {
-            return object;
-        }
-
-        public DiffNode getDifs() {
-            return difs;
-        }
+        void onChanges(ChangeDispatcher source, DiffService.DiffData changes);
     }
 }

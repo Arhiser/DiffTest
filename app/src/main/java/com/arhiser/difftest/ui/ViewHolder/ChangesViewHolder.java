@@ -4,6 +4,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.arhiser.difftest.difs.Cancellable;
+import com.arhiser.difftest.difs.DiffService;
 import com.arhiser.difftest.model.ChangeDispatcher;
 
 import java.util.HashMap;
@@ -11,10 +13,10 @@ import java.util.HashMap;
 import de.danielbechler.diff.node.DiffNode;
 import de.danielbechler.diff.node.Visit;
 
-public class ChangesViewHolder extends BaseViewHolder<ChangeDispatcher.DiffData> implements DiffNode.Visitor {
+public class ChangesViewHolder extends BaseViewHolder<DiffService.DiffData> implements DiffNode.Visitor {
 
     HashMap<String, View> dispatchTable = new HashMap<>();
-    ChangeDispatcher.DiffData diffData;
+    DiffService.DiffData diffData;
 
     public ChangesViewHolder(View root) {
         super(root);
@@ -22,7 +24,7 @@ public class ChangesViewHolder extends BaseViewHolder<ChangeDispatcher.DiffData>
     }
 
     @Override
-    public void bind(ChangeDispatcher.DiffData data) {
+    public void bind(DiffService.DiffData data) {
         this.diffData = data;
         dispatch();
     }
@@ -48,7 +50,7 @@ public class ChangesViewHolder extends BaseViewHolder<ChangeDispatcher.DiffData>
         View affectedView = dispatchTable.get(node.getPropertyName());
         if (affectedView != null) {
             if (affectedView instanceof TextView) {
-                ((TextView)affectedView).setText(node.get(diffData.getObject()).toString());
+                ((TextView)affectedView).setText(node.get(diffData.getObjectNew()).toString());
             }
         }
         node.visitChildren(this);
