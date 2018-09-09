@@ -1,4 +1,6 @@
-package com.arhiser.difftest.difs;
+package com.arhiser.difftest.test;
+
+import com.arhiser.difftest.difs.AndroidIntrospector;
 
 import java.util.ArrayList;
 

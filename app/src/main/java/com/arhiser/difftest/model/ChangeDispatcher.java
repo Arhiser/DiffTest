@@ -5,6 +5,8 @@ import com.arhiser.difftest.difs.DiffService;
 
 import java.util.HashSet;
 
+import de.danielbechler.diff.node.DiffNode;
+
 public class ChangeDispatcher<T extends Copyable<T>> {
     private T currentValue;
     private T changed;
@@ -23,9 +25,11 @@ public class ChangeDispatcher<T extends Copyable<T>> {
     }
 
     public Cancellable apply(DiffService diffService) {
-        return diffService.getDiff(currentValue, changed, diff -> {
-            for(ChangesListener listener: listeners) {
-                listener.onChanges(this, diff);
+        return diffService.getDiff(changed, changed, diff -> {
+            if (diff.getDifs().getState() != DiffNode.State.UNTOUCHED) {
+                for (ChangesListener listener : listeners) {
+                    listener.onChanges(this, diff);
+                }
             }
             currentValue = changed;
         });

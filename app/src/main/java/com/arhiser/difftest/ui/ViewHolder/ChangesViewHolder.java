@@ -6,6 +6,9 @@ import android.widget.TextView;
 
 import com.arhiser.difftest.difs.Cancellable;
 import com.arhiser.difftest.difs.DiffService;
+import com.arhiser.difftest.difs.mapping.BasicDiffMappings;
+import com.arhiser.difftest.difs.mapping.DiffDispatcher;
+import com.arhiser.difftest.difs.mapping.DiffMappings;
 import com.arhiser.difftest.model.ChangeDispatcher;
 
 import java.util.HashMap;
@@ -13,46 +16,39 @@ import java.util.HashMap;
 import de.danielbechler.diff.node.DiffNode;
 import de.danielbechler.diff.node.Visit;
 
-public class ChangesViewHolder extends BaseViewHolder<DiffService.DiffData> implements DiffNode.Visitor {
+public class ChangesViewHolder extends BaseViewHolder<DiffService.DiffData> {
 
-    HashMap<String, View> dispatchTable = new HashMap<>();
-    DiffService.DiffData diffData;
+    DiffDispatcher diffDispatcher;
 
     public ChangesViewHolder(View root) {
         super(root);
-        fillDispatchTable(root);
+        diffDispatcher = new DiffDispatcher(getDispatchTable(), getDiffMappings());
+    }
+
+    protected HashMap<String, Object> getDispatchTable() {
+        HashMap<String, Object> dispatchTable = new HashMap<>();
+        fillDispatchTable(dispatchTable, getView());
+        return dispatchTable;
+    }
+
+    protected DiffMappings getDiffMappings() {
+        return new BasicDiffMappings().addMapping(TextView.class, String.class, TextView::setText);
     }
 
     @Override
     public void bind(DiffService.DiffData data) {
-        this.diffData = data;
-        dispatch();
+        diffDispatcher.dispatch(data);
     }
 
-    private void dispatch() {
-        node(diffData.getDifs(), null);
-    }
-
-    private void fillDispatchTable(View root) {
+    private void fillDispatchTable(HashMap<String, Object> dispatchTable, View root) {
         if (root.getTag() != null && root.getTag() instanceof String) {
             dispatchTable.put((String) root.getTag(), root);
         }
         if (root instanceof ViewGroup) {
             ViewGroup viewGroup = (ViewGroup) root;
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                fillDispatchTable(viewGroup.getChildAt(i));
+                fillDispatchTable(dispatchTable, viewGroup.getChildAt(i));
             }
         }
-    }
-
-    @Override
-    public void node(DiffNode node, Visit visit) {
-        View affectedView = dispatchTable.get(node.getPropertyName());
-        if (affectedView != null) {
-            if (affectedView instanceof TextView) {
-                ((TextView)affectedView).setText(node.get(diffData.getObjectNew()).toString());
-            }
-        }
-        node.visitChildren(this);
     }
 }
