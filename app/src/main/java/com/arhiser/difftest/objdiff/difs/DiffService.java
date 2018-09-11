@@ -1,4 +1,4 @@
-package com.arhiser.difftest.difs;
+package com.arhiser.difftest.objdiff.difs;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;

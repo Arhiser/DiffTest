@@ -1,4 +1,4 @@
-package com.arhiser.difftest.difs.mapping;
+package com.arhiser.difftest.objdiff.difs.mapping;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ public class BasicDiffMappings extends DiffMappings {
     public void map(Object receiver, Object value) {
         for(Mapping mapping: mappings) {
             if (mapping.getTargetClass().isAssignableFrom(receiver.getClass())
-                    &&  mapping.getValueClass().isAssignableFrom(value.getClass())) {
+                    &&  (value == null || mapping.getValueClass().isAssignableFrom(value.getClass()))) {
                 mapping.map(receiver, value);
                 return;
             }

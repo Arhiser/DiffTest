@@ -2,13 +2,13 @@ package com.arhiser.difftest.ui.Main;
 
 import android.text.TextUtils;
 
-import com.arhiser.difftest.model.Copyable;
+import com.arhiser.difftest.objdiff.dispatch.Copyable;
 
 public class MainViewModel implements Copyable<MainViewModel> {
-    private String tempCelsius;
-    private String tempFaren;
-    private String tempKelvin;
-    private String belowZeroMessage;
+    private String tempCelsius = "";
+    private String tempFaren = "";
+    private String tempKelvin = "";
+    private String belowZeroMessage = "";
 
     public String getTempFaren() {
         return tempFaren;
@@ -26,32 +26,34 @@ public class MainViewModel implements Copyable<MainViewModel> {
         return belowZeroMessage;
     }
 
-    public MainViewModel(String tempCelsius, String tempFaren, String tempKelvin) {
-        this.tempFaren = tempFaren;
+    public void setTempCelsius(String tempCelsius) {
         this.tempCelsius = tempCelsius;
+    }
+
+    public void setTempFaren(String tempFaren) {
+        this.tempFaren = tempFaren;
+    }
+
+    public void setTempKelvin(String tempKelvin) {
         this.tempKelvin = tempKelvin;
     }
 
-    public MainViewModel(String tempCelsius) {
-        setTemperatureToConvert(tempCelsius);
+    public void setBelowZeroMessage(String belowZeroMessage) {
+        this.belowZeroMessage = belowZeroMessage;
     }
 
-    public void setTemperatureToConvert(String tempCelsius) {
+    public MainViewModel() {
+    }
+
+    public MainViewModel(String tempCelsius, String tempFaren, String tempKelvin, String belowZeroMessage) {
+        this.tempFaren = tempFaren;
         this.tempCelsius = tempCelsius;
-        if (TextUtils.isEmpty(tempCelsius)) {
-            this.tempKelvin = "";
-            this.tempFaren = "";
-            this.belowZeroMessage = "";
-        } else {
-            int temp = Integer.parseInt(tempCelsius);
-            this.tempKelvin = Integer.toString(temp + 273);
-            this.tempFaren = Integer.toString(Math.round(1.8f * temp + 32));
-            this.belowZeroMessage = temp > 0 ? "temperature is above zero" : "temperature is below zero";
-        }
+        this.tempKelvin = tempKelvin;
+        this.belowZeroMessage = belowZeroMessage;
     }
 
     @Override
     public MainViewModel copy() {
-        return new MainViewModel(tempCelsius);
+        return new MainViewModel(getTempCelsius(), getTempFaren(), getTempKelvin(), getBelowZeroMessage());
     }
 }

@@ -1,28 +1,27 @@
-package com.arhiser.difftest.ui.ViewHolder;
+package com.arhiser.difftest.objdiff.ui.ViewHolder;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.arhiser.difftest.difs.Cancellable;
-import com.arhiser.difftest.difs.DiffService;
-import com.arhiser.difftest.difs.mapping.BasicDiffMappings;
-import com.arhiser.difftest.difs.mapping.DiffDispatcher;
-import com.arhiser.difftest.difs.mapping.DiffMappings;
-import com.arhiser.difftest.model.ChangeDispatcher;
+import com.arhiser.difftest.objdiff.difs.DiffService;
+import com.arhiser.difftest.objdiff.difs.mapping.BasicDiffMappings;
+import com.arhiser.difftest.objdiff.difs.mapping.DiffDispatcher;
+import com.arhiser.difftest.objdiff.difs.mapping.DiffMappings;
+import com.arhiser.difftest.objdiff.ui.controller.Controller;
 
 import java.util.HashMap;
 
-import de.danielbechler.diff.node.DiffNode;
-import de.danielbechler.diff.node.Visit;
-
-public class ChangesViewHolder extends BaseViewHolder<DiffService.DiffData> {
+public class ChangesViewHolder<C extends Controller> extends BaseViewHolder<DiffService.DiffData> {
 
     DiffDispatcher diffDispatcher;
+    C controller;
 
-    public ChangesViewHolder(View root) {
+    public ChangesViewHolder(View root, C controller) {
         super(root);
         diffDispatcher = new DiffDispatcher(getDispatchTable(), getDiffMappings());
+        this.controller = controller;
     }
 
     protected HashMap<String, Object> getDispatchTable() {
@@ -32,7 +31,8 @@ public class ChangesViewHolder extends BaseViewHolder<DiffService.DiffData> {
     }
 
     protected DiffMappings getDiffMappings() {
-        return new BasicDiffMappings().addMapping(TextView.class, String.class, TextView::setText);
+        return new BasicDiffMappings().addMapping(TextView.class, String.class, (object, value) ->
+                object.setText(TextUtils.isEmpty(value) ? "" : value));
     }
 
     @Override

@@ -1,11 +1,7 @@
-package com.arhiser.difftest.difs.mapping;
+package com.arhiser.difftest.objdiff.difs.mapping;
 
-import android.view.View;
-import android.widget.TextView;
+import com.arhiser.difftest.objdiff.difs.DiffService;
 
-import com.arhiser.difftest.difs.DiffService;
-
-import java.util.HashMap;
 import java.util.Map;
 
 import de.danielbechler.diff.node.DiffNode;

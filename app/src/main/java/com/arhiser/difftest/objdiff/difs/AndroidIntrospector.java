@@ -1,4 +1,4 @@
-package com.arhiser.difftest.difs;
+package com.arhiser.difftest.objdiff.difs;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

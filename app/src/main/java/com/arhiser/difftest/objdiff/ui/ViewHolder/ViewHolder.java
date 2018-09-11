@@ -1,4 +1,4 @@
-package com.arhiser.difftest.ui.ViewHolder;
+package com.arhiser.difftest.objdiff.ui.ViewHolder;
 
 import android.view.View;
 

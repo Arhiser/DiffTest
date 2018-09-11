@@ -1,7 +1,7 @@
-package com.arhiser.difftest.model;
+package com.arhiser.difftest.objdiff.dispatch;
 
-import com.arhiser.difftest.difs.Cancellable;
-import com.arhiser.difftest.difs.DiffService;
+import com.arhiser.difftest.objdiff.difs.Cancellable;
+import com.arhiser.difftest.objdiff.difs.DiffService;
 
 import java.util.HashSet;
 
@@ -17,15 +17,15 @@ public class ChangeDispatcher<T extends Copyable<T>> {
         this.changed = initialValue;
     }
 
-    public T startChange() {
+    public T startChanges() {
         if (currentValue != null) {
             changed = currentValue.copy();
         }
         return changed;
     }
 
-    public Cancellable apply(DiffService diffService) {
-        return diffService.getDiff(changed, changed, diff -> {
+    public Cancellable dispatchChanges(DiffService diffService) {
+        return diffService.getDiff(currentValue, changed, diff -> {
             if (diff.getDifs().getState() != DiffNode.State.UNTOUCHED) {
                 for (ChangesListener listener : listeners) {
                     listener.onChanges(this, diff);
@@ -33,6 +33,13 @@ public class ChangeDispatcher<T extends Copyable<T>> {
             }
             currentValue = changed;
         });
+    }
+
+    public void dispatchAllModel(DiffService diffService) {
+        T model = currentValue != null ? currentValue : changed;
+        currentValue = null;
+        changed = model;
+        dispatchChanges(diffService);
     }
 
     public void addListener(ChangesListener listener) {

@@ -1,23 +1,20 @@
 package com.arhiser.difftest.ui.Main;
 
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
 import com.arhiser.difftest.R;
-import com.arhiser.difftest.ui.ViewHolder.ChangesViewHolder;
+import com.arhiser.difftest.objdiff.ui.ViewHolder.ChangesViewHolder;
 
-public class MainViewHolder extends ChangesViewHolder {
+public class MainViewHolder extends ChangesViewHolder<MainController> {
 
     private EditText tempInput;
-    InteractionListener listener;
 
-    public MainViewHolder(View root, final InteractionListener interactionListener) {
-        super(root);
+    public MainViewHolder(View root, MainController controller) {
+        super(root, controller);
         tempInput = (EditText) root.findViewById(R.id.temp_input);
-        listener = interactionListener;
         tempInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -35,12 +32,8 @@ public class MainViewHolder extends ChangesViewHolder {
                 if (text.equals("-")) {
                     text = "";
                 }
-                interactionListener.onTemperatureEntered(text);
+                controller.onTemperatureTextChanged(text);
             }
         });
-    }
-
-    interface InteractionListener {
-        void onTemperatureEntered(String temp);
     }
 }

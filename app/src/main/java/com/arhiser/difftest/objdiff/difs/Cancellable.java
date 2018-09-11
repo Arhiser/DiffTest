@@ -1,4 +1,4 @@
-package com.arhiser.difftest.difs;
+package com.arhiser.difftest.objdiff.difs;
 
 public interface Cancellable {
     void cancel();
